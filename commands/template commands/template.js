@@ -11,16 +11,10 @@ module.exports = {
         const {message} = toolbox
 
             message.channel.send({embeds: [
-                new MessageEmbed().setAuthor(`${user.username} [ #${user.discriminator} ]`).setDescription(`Click the buttons below to view the page\non ${user.username} for many botlists.`).addField('Please Note', 'If this bot doesn\'t have a page. nothing will show up.').setThumbnail(user.avatarURL()).setColor(0xbf943d)
+                new MessageEmbed().setAuthor(`Template Command`).setDescription(`Template Description`).setColor(0x0e0e0e)
             ], 
             components: [
                 new MessageActionRow().addComponents(
-                    new MessageButton()
-                        .setLabel('Github')
-                        .setURL(`https://top.gg/bot/${user.id}`)
-                        .setStyle('LINK'), 
-                )
-                .addComponents(
                     new MessageSelectMenu()
                         .setCustomId('templateSelect')
                         .setPlaceholder('Pick an option...')
