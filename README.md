@@ -1,2 +1,1 @@
-A discord bot template that I made and personally use.
-Template based on Litties Boot's Code.
+Project paused for now. No updates to this code will be published at the moment.
