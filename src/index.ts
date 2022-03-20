@@ -1,13 +1,7 @@
-import { BootClient, ValueOption } from "./lib/index.js"
-import { Intents } from "discord.js"
-import dotenv from 'dotenv'
-dotenv.config()
+import { BootClient } from "./lib/BootClient"
+import { ClientEventManager } from "./lib/ClientEventManager"
+import { ClientEventBase } from "./bases/ClientEventBase"
 
-const client = new BootClient({
-    intents: ["GUILDS"],
-    assetFolders: ["assets"],
-})
-
-if (process.env.BOT_TOKEN) client.start(process.env.BOT_TOKEN)
-
-//console.log(new ValueOption({ name: "description", type: "STRING", description: "Embed Description" }).setRequired())
+export {
+    BootClient, ClientEventManager, ClientEventBase
+}
