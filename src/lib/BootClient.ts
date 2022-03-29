@@ -5,8 +5,8 @@ import { ClientOptions } from "./Interfaces";
 
 export class BootClient extends Client {
     eventManager: ClientEventManager;
-    constructor(options?: ClientOptions) {
-        super({ intents: ["GUILD_MESSAGES", "GUILDS"] });
+    constructor(options: ClientOptions) {
+        super({ intents: options.intents });
         this.eventManager = new ClientEventManager({ client: this });
         if (options?.eventFolders) this.eventManager.loadFolders(options.eventFolders)
         if (options?.events) this.eventManager.registerEvents(options.events)
