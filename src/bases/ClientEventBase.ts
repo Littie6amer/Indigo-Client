@@ -7,6 +7,6 @@ export class ClientEventBase {
         this.name = options.name
     }
     execute(client: BootClient, ...data: any[]) {
-		console.log(`[${this.name}] No execute function set!`)
-	}
+        console.log(`[${this.name}] No execute function set!`)
+    }
 }

@@ -3,48 +3,31 @@ import path from "path"
 import fs from "fs"
 import { BootClient } from "./BootClient";
 import { ClientEventManagerOptions } from "./Interfaces";
+import { FileUtilties } from "./modules/FileUtilties";
 
-export class ClientEventManager {
+export class ClientEventManager extends FileUtilties {
     events: ClientEventBase[];
     client: BootClient;
     constructor(options: ClientEventManagerOptions) {
+        super()
         this.events = []
         this.client = options.client
+        const folders = options.folders
+        if (folders?.length) {
+            console.log(`[EventManager] Searching folders: ${folders.join(", ")}`)
+            this.registerDirectories(folders)
+        }
     }
 
-    async loadFolders(folders: string[]) {
-        console.log(`[EventManager] Searching folders: ${folders.join(", ")}`)
+    async registerDirectories(folders: string[]) {
         for (let index = 0; index < folders.length; index++) {
-            await this.loadFolder(folders[index])
+            await this.registerDirectory(folders[index])
         }
     }
 
-    async loadFolder(folder: string) {
-        let files = await fs.readdirSync(require?.main?.path + path.sep + folder)
-        let folders = files.filter(name => !name.includes("."))
-        files = files.filter(name => name.endsWith(".js"))
-        let events: ClientEventBase[] = [];
-        for (let file in files) {
-            let event = await this.getFileEvent(require?.main?.path + path.sep + folder + path.sep + files[file])
-            if (event) events.push(event)
-        }
+    async registerDirectory(directoryPath: string) {
+        const events = (await this.importFromDirectory(directoryPath)).filter(event => event instanceof ClientEventBase)
         await this.registerEvents(events)
-        for (let folder in folders) {
-            await this.loadFolder(folder + path.sep + folders[folder])
-        }
-    }
-
-    async loadFile(file: string) {
-        let { default: data } = await import(require?.main?.path + path.sep + file)
-        let event: ClientEventBase = new data()
-        if (data.getSuperclass()) await this.registerEvent(event)
-    }
-
-    async getFileEvent(filePath: string) {
-        let { default: data } = await import(filePath)
-        let event: ClientEventBase = new data()
-        if (event) return event
-        else return null
     }
 
     async registerEvents(events: ClientEventBase[]) {
@@ -67,16 +50,5 @@ export class ClientEventManager {
         if (events.length) events.forEach(event => {
             event.execute(this.client, ...data)
         });
-    }
-
-    async loadBootEvents() {
-        let files = await fs.readdirSync(`${path.resolve(__dirname, "../boot-events")}`)
-        files = files.filter(name => name.endsWith(".js"))
-        let events: ClientEventBase[] = [];
-        for (let file in files) {
-            let event = await this.getFileEvent(path.resolve(__dirname, "../boot-events") + path.sep + files[file])
-            if (event) events.push(event)
-        }
-        await this.registerEvents(events)
     }
 }
