@@ -51,16 +51,17 @@ export class SlashCommandManager extends FileUtilties {
     }
 
     async _inDev_Deploy(name: string, guildId?: string) {
-        const url = `https://discord.com/api/v9/applications/${this.client.id}/`+guildId?`guilds/${guildId}/`:``+`commands`
-        fetch(url, {
+        const url = `https://discord.com/api/v9/applications/${this.client.user?.id}/`+guildId?`guilds/${guildId}/`:``+`commands`
+        const slashcommand = this.slashcommands.find(s => s.name == name)
+        if (slashcommand) fetch(url, {
             method: "post",
             headers: {
                 "Authorization": "Bot "+this.client.token,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this.slashcommands.find(s => s.name == name).getJSON())
+            body: JSON.stringify(slashcommand.getJSON())
         }).then(async res => {
-            console.log(`/${a.name}: [${res.status}] ${res.statusText}`)
+            console.log(`/${slashcommand.name}: [${res.status}] ${res.statusText}`)
         })
     }
 }
