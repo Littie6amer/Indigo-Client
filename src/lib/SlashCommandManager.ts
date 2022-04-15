@@ -6,6 +6,7 @@ import { SlashCommandManagerOptions } from "./Interfaces";
 import { FileUtilties } from "./modules/FileUtilties";
 import { Toolbox } from "./modules/Toolbox";
 const toolbox = new Toolbox()
+import fetch from "node-fetch"
 
 export class SlashCommandManager extends FileUtilties {
     slashcommands: SlashCommandBase[]

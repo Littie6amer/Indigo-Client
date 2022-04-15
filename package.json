@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Extended Discord.js Client",
   "main": "build/index.js",
+  "type": "module",
   "dependencies": {
     "@discordjs/rest": "^0.1.0-canary.0",
     "discord.js": "^13.6.0",
