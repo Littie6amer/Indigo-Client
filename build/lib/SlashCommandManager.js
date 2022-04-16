@@ -62,29 +62,27 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
         });
     }
     _inDev_Deploy(name, guildId) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const command = yield ((_a = this.client.application) === null || _a === void 0 ? void 0 : _a.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name));
             const slashcommand = this.slashcommands.find(s => s.name == name);
             if (!slashcommand)
                 return;
-            (_b = this.client.application) === null || _b === void 0 ? void 0 : _b.commands.fetch();
             if (command)
-                (_c = this.client.application) === null || _c === void 0 ? void 0 : _c.commands.edit(command, slashcommand.getData()).catch();
+                (_b = this.client.application) === null || _b === void 0 ? void 0 : _b.commands.edit(command, slashcommand.getData()).catch();
             else
-                (_d = this.client.application) === null || _d === void 0 ? void 0 : _d.commands.create(slashcommand.getData(), guildId).catch();
+                (_c = this.client.application) === null || _c === void 0 ? void 0 : _c.commands.create(slashcommand.getData(), guildId).catch();
         });
     }
     _inDev_Delete(name, guildId) {
-        var _a, _b, _c;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const commands = guildId ? yield ((_a = this.client.application) === null || _a === void 0 ? void 0 : _a.commands.fetch({ guildId })) : yield ((_b = this.client.application) === null || _b === void 0 ? void 0 : _b.commands.fetch());
+            const command = yield ((_a = this.client.application) === null || _a === void 0 ? void 0 : _a.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name));
             const slashcommand = this.slashcommands.find(s => s.name == name);
-            const slashcommanddata = commands === null || commands === void 0 ? void 0 : commands.find(command => command.name == name);
             if (!slashcommand)
                 return;
-            if (slashcommanddata)
-                (_c = this.client.application) === null || _c === void 0 ? void 0 : _c.commands.delete(slashcommanddata, guildId).catch();
+            if (command)
+                (_b = this.client.application) === null || _b === void 0 ? void 0 : _b.commands.delete(command, guildId).catch();
         });
     }
 }
