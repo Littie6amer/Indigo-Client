@@ -1,4 +1,3 @@
 .env
 node_modules
 commands/do-not-commit
-build

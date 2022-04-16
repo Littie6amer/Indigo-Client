@@ -1,4 +1,4 @@
-import { CommandInteraction, Interaction } from "discord.js";
+import { CommandInteraction, Interaction, ApplicationCommandResolvable, ApplicationCommandDataResolvable } from "discord.js";
 import path from "path";
 import { SlashCommandBase } from "../bases/SlashCommandBase";
 import { BootClient } from "./BootClient";
@@ -6,7 +6,6 @@ import { SlashCommandManagerOptions } from "./Interfaces";
 import { FileUtilties } from "./modules/FileUtilties";
 import { Toolbox } from "./modules/Toolbox";
 const toolbox = new Toolbox()
-import fetch from "node-fetch"
 
 export class SlashCommandManager extends FileUtilties {
     slashcommands: SlashCommandBase[]
@@ -52,17 +51,17 @@ export class SlashCommandManager extends FileUtilties {
     }
 
     async _inDev_Deploy(name: string, guildId?: string) {
-        const url = `https://discord.com/api/v9/applications/${this.client.user?.id}/`+guildId?`guilds/${guildId}/`:``+`commands`
+        const command = await this.client.application?.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
         const slashcommand = this.slashcommands.find(s => s.name == name)
-        if (slashcommand) fetch(url, {
-            method: "post",
-            headers: {
-                "Authorization": "Bot "+this.client.token,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(slashcommand.getJSON())
-        }).then(async res => {
-            console.log(`/${slashcommand.name}: [${res.status}] ${res.statusText}`)
-        })
+        if (!slashcommand) return
+        if (command) this.client.application?.commands.edit(command, slashcommand.getData() as ApplicationCommandDataResolvable).catch()
+        else this.client.application?.commands.create(slashcommand.getData() as ApplicationCommandDataResolvable, guildId).catch()
+    }
+
+    async _inDev_Delete(name: string, guildId?: string) {
+        const command = await this.client.application?.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
+        const slashcommand = this.slashcommands.find(s => s.name == name)
+        if (!slashcommand) return
+        if (command) this.client.application?.commands.delete(command, guildId).catch()
     }
 }
