@@ -7,7 +7,8 @@ export interface ClientOptions {
     events?: ClientEventBase[]
     slashCommandFolders?: string[]
     bootEvents?: boolean
-    intents: BitFieldResolvable<IntentsString, number>
+    intents: BitFieldResolvable<IntentsString, number>,
+    mobile?: boolean
 }
 
 export interface ClientEventManagerOptions {

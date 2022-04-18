@@ -7,6 +7,7 @@ export interface ClientOptions {
     slashCommandFolders?: string[];
     bootEvents?: boolean;
     intents: BitFieldResolvable<IntentsString, number>;
+    mobile?: boolean;
 }
 export interface ClientEventManagerOptions {
     client: BootClient;

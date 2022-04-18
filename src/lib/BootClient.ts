@@ -12,7 +12,7 @@ export class BootClient extends Client {
     eventManager: ClientEventManager;
     slashCommandManager: SlashCommandManager;
     constructor(options: ClientOptions) {
-        super({ intents: options.intents });
+        super({ intents: options.intents, ws: { properties: { $browser: options.mobile ? "Discord iOS" : undefined } } });
         const eventFolders = options.eventFolders?.map(folder => this.rootPath+path.sep+folder)||[]
         if (options?.bootEvents !== false) eventFolders?.push(path.resolve(__dirname, "../boot-events"))
         this.eventManager = new ClientEventManager({ client: this, folders: eventFolders });

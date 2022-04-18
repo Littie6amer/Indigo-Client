@@ -12,7 +12,7 @@ const SlashCommandManager_1 = require("./SlashCommandManager");
 class BootClient extends discord_js_1.Client {
     constructor(options) {
         var _a, _b, _c;
-        super({ intents: options.intents });
+        super({ intents: options.intents, ws: { properties: { $browser: options.mobile ? "Discord iOS" : undefined } } });
         this.rootPath = ((_a = require === null || require === void 0 ? void 0 : require.main) === null || _a === void 0 ? void 0 : _a.path) || "";
         const eventFolders = ((_b = options.eventFolders) === null || _b === void 0 ? void 0 : _b.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
         if ((options === null || options === void 0 ? void 0 : options.bootEvents) !== false)
