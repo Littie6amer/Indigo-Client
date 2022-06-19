@@ -22,8 +22,8 @@ export class SlashCommandBase {
         if (!subcommand) this.execute(client, interaction)
         else subcommand.run(optionNames, client, interaction)
     }
-    execute(client: BootClient, interaction: CommandInteraction) {
-        interaction.reply("This command is missing any code to run!")
+    execute(client: BootClient, interaction: CommandInteraction): any {
+        return interaction.reply("This command is missing any code to run!")
     }
     getData(): object {
         const { name, description, options, subcommands, isSubcommand } = this
@@ -57,7 +57,7 @@ export class SlashCommandBase {
     getOptionData(option: SlashCommandValueOption): object {
         const { name, description, required, choices, channel_types, min_value, max_value, autocomplete } = option
         const type = this.getOptionTypeValue(option.type); 
-        const json: any = { name, description, type, }
+        const json: any = { name, description, type }
         if (required) json.required = required
         if (choices) json.choices = choices
         if (channel_types?.length) json.channel_types = channel_types.map(this.getOptionTypeValue)
