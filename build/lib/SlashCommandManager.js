@@ -57,10 +57,31 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
             let slashcommands = this.slashcommands.filter(s => s.name == name);
             if (slashcommands.length)
                 slashcommands.forEach(slashcommand => {
-                    slashcommand.run(interaction.options.data.map(option => option.name), this.client, interaction);
+                    slashcommand.run(getSubcommands(interaction.options.data[0]), this.client, interaction);
                 });
+            function getSubcommands(option) {
+                if (!(option === null || option === void 0 ? void 0 : option.options))
+                    return [];
+                return [option.name, ...getSubcommands(option.options[0])];
+            }
         });
     }
+    // createSubCommandTree(slashcommand: CommandInteraction) {
+    //     function createSubCommandTreeFromOption(option: CommandInteractionOption<CacheType>) {
+    //         const tree: any = {}
+    //         for (let opt in option.options||[]) {
+    //             let optionData = option?.options?.[opt]
+    //             if (optionData) tree[optionData.name] = optionData.options?.length ? createSubCommandTreeFromOption(optionData) : []
+    //         }
+    //         return tree
+    //     }
+    //     const tree: any = {}
+    //     for (let option in slashcommand.options.data) {
+    //         let optionData = slashcommand.options.data[option]
+    //         tree[optionData.name] = optionData.options?.length ? createSubCommandTreeFromOption(optionData) : []
+    //     }
+    //     return tree
+    // }
     _inDev_Deploy(name, guildId) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {

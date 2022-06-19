@@ -17,7 +17,7 @@ export class SlashCommandBase {
         this.isSubcommand = false
     }
     run(optionNames: string[], client: BootClient, interaction: CommandInteraction) {
-        const subcommand = optionNames[0] ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
+        const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
         optionNames.shift()
         if (!subcommand) this.execute(client, interaction)
         else subcommand.run(optionNames, client, interaction)

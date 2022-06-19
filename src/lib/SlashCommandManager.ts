@@ -1,4 +1,4 @@
-import { CommandInteraction, Interaction, ApplicationCommandResolvable, ApplicationCommandDataResolvable } from "discord.js";
+import { CommandInteraction, Interaction, ApplicationCommandResolvable, ApplicationCommandDataResolvable, CommandInteractionOption, CacheType } from "discord.js";
 import path from "path";
 import { SlashCommandBase } from "../bases/SlashCommandBase";
 import { BootClient } from "./BootClient";
@@ -46,10 +46,14 @@ export class SlashCommandManager extends FileUtilties {
     async runSlashCommand(name: string, interaction: CommandInteraction) {
         let slashcommands: SlashCommandBase[] | undefined = this.slashcommands.filter(s => s.name == name)
         if (slashcommands.length) slashcommands.forEach(slashcommand => {
-            slashcommand.run(interaction.options.data.map(option => option.name), this.client, interaction)
+            slashcommand.run(getSubcommands(interaction.options.data[0]), this.client, interaction)
         });
+        function getSubcommands (option: CommandInteractionOption<CacheType> | undefined): string[] {
+            if (!option?.options) return []
+            return [option.name, ...getSubcommands(option.options[0])]
+        }
     }
-
+    
     async _inDev_Deploy(name: string, guildId?: string) {
         const command = await this.client.application?.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
         const slashcommand = this.slashcommands.find(s => s.name == name)

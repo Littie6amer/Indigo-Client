@@ -11,7 +11,8 @@ class SlashCommandBase {
         this.isSubcommand = false;
     }
     run(optionNames, client, interaction) {
-        const subcommand = optionNames[0] ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null;
+        // return console.log(optionNames)
+        const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null;
         optionNames.shift();
         if (!subcommand)
             this.execute(client, interaction);

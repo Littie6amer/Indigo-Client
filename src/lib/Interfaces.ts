@@ -1,4 +1,4 @@
-import { BitFieldResolvable, IntentsString } from "discord.js";
+import { BitFieldResolvable, GatewayIntentsString } from "discord.js";
 import { ClientEventBase } from "..";
 import { BootClient } from "./BootClient";
 
@@ -7,7 +7,7 @@ export interface ClientOptions {
     events?: ClientEventBase[]
     slashCommandFolders?: string[]
     bootEvents?: boolean
-    intents: BitFieldResolvable<IntentsString, number>,
+    intents: BitFieldResolvable<GatewayIntentsString, number>,
     mobile?: boolean
 }
 
