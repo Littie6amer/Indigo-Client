@@ -1,6 +1,6 @@
 import { CommandInteraction } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { BootClient } from "../lib/BootClient"
+import { Client } from "../lib/Client"
 import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandValueOption } from "./Interfaces";
 
 export class SlashCommandBase {
@@ -16,13 +16,13 @@ export class SlashCommandBase {
         this.subcommands = options.subcommands?.map(subcommand => subcommand.makeSubcommand()) ?? []
         this.isSubcommand = false
     }
-    run(optionNames: string[], client: BootClient, interaction: CommandInteraction) {
+    run(optionNames: string[], client: Client, interaction: CommandInteraction) {
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
         optionNames.shift()
         if (!subcommand) this.execute(client, interaction)
         else subcommand.run(optionNames, client, interaction)
     }
-    execute(client: BootClient, interaction: CommandInteraction): any {
+    execute(client: Client, interaction: CommandInteraction): any {
         return interaction.reply("This command is missing any code to run!")
     }
     getData(): object {

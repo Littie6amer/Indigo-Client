@@ -11,7 +11,6 @@ class SlashCommandBase {
         this.isSubcommand = false;
     }
     run(optionNames, client, interaction) {
-        // return console.log(optionNames)
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null;
         optionNames.shift();
         if (!subcommand)
@@ -20,7 +19,7 @@ class SlashCommandBase {
             subcommand.run(optionNames, client, interaction);
     }
     execute(client, interaction) {
-        interaction.reply("This command is missing any code to run!");
+        return interaction.reply("This command is missing any code to run!");
     }
     getData() {
         const { name, description, options, subcommands, isSubcommand } = this;
@@ -62,7 +61,7 @@ class SlashCommandBase {
     getOptionData(option) {
         const { name, description, required, choices, channel_types, min_value, max_value, autocomplete } = option;
         const type = this.getOptionTypeValue(option.type);
-        const json = { name, description, type, };
+        const json = { name, description, type };
         if (required)
             json.required = required;
         if (choices)

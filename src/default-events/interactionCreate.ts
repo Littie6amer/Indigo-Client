@@ -1,13 +1,13 @@
 import { Interaction } from "discord.js";
 import { ClientEventBase } from "../bases/ClientEventBase";
-import { BootClient } from "../lib/BootClient";
+import { Client } from "../lib/Client";
 
 export default class Event extends ClientEventBase {
     constructor() {
         super({ name: "interactionCreate" })
     }
 
-    execute(client: BootClient, interaction: Interaction): void {
-        if (interaction.isCommand()) client.slashCommandManager.runSlashCommand(interaction.commandName, interaction)
+    execute(client: Client, interaction: Interaction): void {
+        if (interaction.isChatInputCommand()) client.slashCommandManager.runSlashCommand(interaction.commandName, interaction)
     }
 }

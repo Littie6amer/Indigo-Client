@@ -1,13 +1,11 @@
 import { ClientEventBase } from "..";
-import path from "path"
-import fs from "fs"
-import { BootClient } from "./BootClient";
+import { Client } from "../lib/Client";
 import { ClientEventManagerOptions } from "./Interfaces";
-import { FileUtilties } from "./modules/FileUtilties";
+import { FileUtilties } from "./FileUtilties";
 
 export class ClientEventManager extends FileUtilties {
     events: ClientEventBase[];
-    client: BootClient;
+    client: Client;
     constructor(options: ClientEventManagerOptions) {
         super()
         this.events = []

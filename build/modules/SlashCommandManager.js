@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlashCommandManager = void 0;
 const SlashCommandBase_1 = require("../bases/SlashCommandBase");
-const FileUtilties_1 = require("./modules/FileUtilties");
-const Toolbox_1 = require("./modules/Toolbox");
+const FileUtilties_1 = require("./FileUtilties");
+const Toolbox_1 = require("./Toolbox");
 const toolbox = new Toolbox_1.Toolbox();
 class SlashCommandManager extends FileUtilties_1.FileUtilties {
     constructor(options) {

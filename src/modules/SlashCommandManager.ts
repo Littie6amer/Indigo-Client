@@ -1,15 +1,14 @@
-import { CommandInteraction, Interaction, ApplicationCommandResolvable, ApplicationCommandDataResolvable, CommandInteractionOption, CacheType } from "discord.js";
-import path from "path";
+import { CommandInteraction, ApplicationCommandDataResolvable, CommandInteractionOption, CacheType } from "discord.js";
 import { SlashCommandBase } from "../bases/SlashCommandBase";
-import { BootClient } from "./BootClient";
+import { Client } from "../lib/Client";
 import { SlashCommandManagerOptions } from "./Interfaces";
-import { FileUtilties } from "./modules/FileUtilties";
-import { Toolbox } from "./modules/Toolbox";
+import { FileUtilties } from "./FileUtilties";
+import { Toolbox } from "./Toolbox";
 const toolbox = new Toolbox()
 
 export class SlashCommandManager extends FileUtilties {
     slashcommands: SlashCommandBase[]
-    client: BootClient;
+    client: Client;
     constructor(options: SlashCommandManagerOptions) {
         super()
         this.client = options.client

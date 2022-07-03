@@ -1,5 +1,4 @@
-import { ClientEvents, CommandInteraction } from "discord.js";
-import { BootClient } from "../lib/BootClient";
+import { ClientEvents } from "discord.js";
 import { SlashCommandBase } from "./SlashCommandBase";
 
 export interface ClientEventOptions {

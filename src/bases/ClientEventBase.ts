@@ -1,4 +1,4 @@
-import { BootClient } from "..";
+import { Client } from "..";
 import { ClientEventOptions } from "./Interfaces";
 
 export class ClientEventBase {
@@ -6,7 +6,7 @@ export class ClientEventBase {
     constructor(options: ClientEventOptions) {
         this.name = options.name
     }
-    execute(client: BootClient, ...data: any[]) {
+    execute(client: Client, ...data: any[]) {
         console.log(`[${this.name}] No execute function set!`)
     }
 }

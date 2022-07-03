@@ -12,11 +12,11 @@ const SlashCommandManager_1 = require("./SlashCommandManager");
 class BootClient extends discord_js_1.Client {
     constructor(options) {
         var _a, _b, _c;
-        super({ intents: options.intents, ws: { properties: { $browser: options.mobile ? "Discord iOS" : undefined } } });
+        super({ intents: options.intents, ws: { properties: { browser: options.mobile ? "Discord iOS" : undefined } } });
         this.rootPath = ((_a = require === null || require === void 0 ? void 0 : require.main) === null || _a === void 0 ? void 0 : _a.path) || "";
         const eventFolders = ((_b = options.eventFolders) === null || _b === void 0 ? void 0 : _b.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
-        if ((options === null || options === void 0 ? void 0 : options.bootEvents) !== false)
-            eventFolders === null || eventFolders === void 0 ? void 0 : eventFolders.push(path_1.default.resolve(__dirname, "../boot-events"));
+        if ((options === null || options === void 0 ? void 0 : options.defaultEvents) !== false)
+            eventFolders === null || eventFolders === void 0 ? void 0 : eventFolders.push(path_1.default.resolve(__dirname, "../defualt-events"));
         this.eventManager = new __1.ClientEventManager({ client: this, folders: eventFolders });
         this.toolbox = new Toolbox_1.Toolbox();
         const slashCommandFolders = ((_c = options.slashCommandFolders) === null || _c === void 0 ? void 0 : _c.map(folder => this.rootPath + path_1.default.sep + folder)) || [];

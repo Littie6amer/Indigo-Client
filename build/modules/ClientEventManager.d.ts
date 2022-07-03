@@ -1,10 +1,10 @@
 import { ClientEventBase } from "..";
-import { IndigoClient } from "./Client";
+import { Client } from "../lib/Client";
 import { ClientEventManagerOptions } from "./Interfaces";
-import { FileUtilties } from "./modules/FileUtilties";
+import { FileUtilties } from "./FileUtilties";
 export declare class ClientEventManager extends FileUtilties {
     events: ClientEventBase[];
-    client: IndigoClient;
+    client: Client;
     constructor(options: ClientEventManagerOptions);
     registerDirectories(folders: string[]): Promise<void>;
     registerDirectory(directoryPath: string): Promise<void>;

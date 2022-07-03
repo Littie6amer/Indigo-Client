@@ -1,9 +1,9 @@
-import { BootClient } from "./lib/BootClient"
-import { ClientEventManager } from "./lib/ClientEventManager"
-import { SlashCommandManager } from "./lib/SlashCommandManager"
+import { Client } from "./lib/Client"
+import { ClientEventManager } from "./modules/ClientEventManager"
+import { SlashCommandManager } from "./modules/SlashCommandManager"
 import { ClientEventBase } from "./bases/ClientEventBase"
 import { SlashCommandBase } from "./bases/SlashCommandBase"
 
 export {
-    BootClient, ClientEventManager, ClientEventBase, SlashCommandBase, SlashCommandManager
+    Client, ClientEventManager, ClientEventBase, SlashCommandBase, SlashCommandManager
 }
