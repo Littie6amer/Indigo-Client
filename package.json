@@ -1,5 +1,5 @@
 {
-  "name": "boot-client",
+  "name": "indigo-client",
   "version": "1.0.0",
   "description": "Extended Discord.js Client",
   "main": "build/index.js",
