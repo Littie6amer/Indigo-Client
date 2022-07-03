@@ -1,4 +1,5 @@
-<div><h1><span>Indigo</span> Extended Discord.js Client</h1>
+<div>
+<h1><span>Indigo</span> Extended Discord.js Client</h1>
 <p>A package that extends discord.js's client and focuses on additional utility, quality of life and organisation.</p>
 <h2>Package Features</h2>
 <ul>
@@ -33,10 +34,13 @@
         padding: .5em;
         font-size: 20px
     }
-</style></div>
+</style>
+</div>
+
 ## Get Started
 Install Indigo Client using NPM
-```npm i https://github.com/Littie6amer/Indigo-Client
+```
+npm i https://github.com/Littie6amer/Indigo-Client
 ```
 Import Indigo Client and create a new bot client.
 ```import { Client } from "indigo-client"import { IntentsBitField } from "discord.js"const client = new Client({
