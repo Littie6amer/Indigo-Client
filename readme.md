@@ -31,7 +31,7 @@ const client = new Client({
         IntentsBitField.Flags.Guilds
     ], // Bot Intents
     eventFolders: ["events"], // The event folder
-    slashCommandFolders: ["commands"] // The command folder
+    commandFolders: ["commands"] // The command folder
     mobileStatus: false // Mobile icon status
 })
 
@@ -49,7 +49,7 @@ const client = new Client({
         IntentsBitField.Flags.Guilds
     ], // Bot Intents
     eventFolders: ["events"], // The event folder
-    slashCommandFolders: ["commands"] // The command folder
+    commandFolders: ["commands"] // The command folder
     mobileStatus: false // Mobile icon status
 })
 

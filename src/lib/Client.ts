@@ -17,8 +17,8 @@ export class Client extends DiscordJS.Client {
         if (options?.defaultEvents !== false) eventFolders?.push(path.resolve(__dirname, "../default-events"))
         this.eventManager = new ClientEventManager({ client: this, folders: eventFolders });
         this.toolbox = new Toolbox()
-        const slashCommandFolders = options.slashCommandFolders?.map(folder => this.rootPath + path.sep + folder) || []
-        this.slashCommandManager = new SlashCommandManager({ client: this, folders: slashCommandFolders })
+        const commandFolders = options.commandFolders?.map(folder => this.rootPath + path.sep + folder) || []
+        this.slashCommandManager = new SlashCommandManager({ client: this, folders: commandFolders })
         if (options?.events) this.eventManager.registerEvents(options.events)
     }
 }

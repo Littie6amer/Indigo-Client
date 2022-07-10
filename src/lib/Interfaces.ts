@@ -5,7 +5,7 @@ import { Client } from "./Client";
 export interface ClientOptions {
     eventFolders?: string[]
     events?: ClientEventBase[]
-    slashCommandFolders?: string[]
+    commandFolders?: string[]
     defaultEvents?: boolean
     intents: BitFieldResolvable<GatewayIntentsString, number>,
     mobileStatus?: boolean
