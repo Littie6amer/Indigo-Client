@@ -42,8 +42,8 @@ class Client extends DiscordJS.Client {
             eventFolders === null || eventFolders === void 0 ? void 0 : eventFolders.push(path_1.default.resolve(__dirname, "../default-events"));
         this.eventManager = new __1.ClientEventManager({ client: this, folders: eventFolders });
         this.toolbox = new Toolbox_1.Toolbox();
-        const slashCommandFolders = ((_c = options.slashCommandFolders) === null || _c === void 0 ? void 0 : _c.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
-        this.slashCommandManager = new SlashCommandManager_1.SlashCommandManager({ client: this, folders: slashCommandFolders });
+        const commandFolders = ((_c = options.commandFolders) === null || _c === void 0 ? void 0 : _c.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
+        this.slashCommandManager = new SlashCommandManager_1.SlashCommandManager({ client: this, folders: commandFolders });
         if (options === null || options === void 0 ? void 0 : options.events)
             this.eventManager.registerEvents(options.events);
     }
