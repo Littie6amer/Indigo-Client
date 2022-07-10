@@ -7,7 +7,7 @@ class Event extends ClientEventBase_1.ClientEventBase {
     }
     execute(client, interaction) {
         if (interaction.isChatInputCommand())
-            client.slashCommandManager.runSlashCommand(interaction.commandName, interaction);
+            client.commands.run(interaction.commandName, interaction);
     }
 }
 exports.default = Event;

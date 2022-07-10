@@ -52,7 +52,7 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
             this.slashcommands.push(slashcommand);
         });
     }
-    runSlashCommand(name, interaction) {
+    run(name, interaction) {
         return __awaiter(this, void 0, void 0, function* () {
             let slashcommands = this.slashcommands.filter(s => s.name == name);
             if (slashcommands.length)

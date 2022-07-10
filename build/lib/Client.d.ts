@@ -6,7 +6,7 @@ import { SlashCommandManager } from "../modules/SlashCommandManager";
 export declare class Client extends DiscordJS.Client {
     rootPath: string;
     toolbox: Toolbox;
-    eventManager: ClientEventManager;
-    slashCommandManager: SlashCommandManager;
+    events: ClientEventManager;
+    commands: SlashCommandManager;
     constructor(options: ClientOptions);
 }

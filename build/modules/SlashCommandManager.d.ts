@@ -11,7 +11,7 @@ export declare class SlashCommandManager extends FileUtilties {
     registerDirectory(directoryPath: string): Promise<void>;
     registerSlashCommands(slashcommands: SlashCommandBase[]): Promise<void>;
     registerSlashCommand(slashcommand: SlashCommandBase): Promise<void>;
-    runSlashCommand(name: string, interaction: CommandInteraction): Promise<void>;
+    run(name: string, interaction: CommandInteraction): Promise<void>;
     _inDev_Deploy(name: string, guildId?: string): Promise<void>;
     _inDev_Delete(name: string, guildId?: string): Promise<void>;
 }
