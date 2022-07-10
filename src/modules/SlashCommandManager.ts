@@ -42,7 +42,7 @@ export class SlashCommandManager extends FileUtilties {
         this.slashcommands.push(slashcommand)
     }
 
-    async runSlashCommand(name: string, interaction: CommandInteraction) {
+    async run(name: string, interaction: CommandInteraction) {
         let slashcommands: SlashCommandBase[] | undefined = this.slashcommands.filter(s => s.name == name)
         if (slashcommands.length) slashcommands.forEach(slashcommand => {
             slashcommand.run(getSubcommands(interaction.options.data[0]), this.client, interaction)
