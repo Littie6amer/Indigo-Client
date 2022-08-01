@@ -1,5 +1,4 @@
 import { CommandInteraction } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 import { Client } from "../lib/Client"
 import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandValueOption } from "./Interfaces";
 import { Toolbox } from "../modules/Toolbox";

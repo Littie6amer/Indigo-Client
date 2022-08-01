@@ -1,6 +1,5 @@
 import { BitFieldResolvable, ColorResolvable, GatewayIntentsString } from "discord.js";
 import { ClientEventBase } from "..";
-import { Client } from "./Client";
 
 export interface ClientOptions {
     eventFolders?: string[]
