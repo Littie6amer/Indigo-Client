@@ -1,28 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlashCommandBase = void 0;
-class SlashCommandBase {
-    constructor(options) {
+const Toolbox_1 = require("../modules/Toolbox");
+class SlashCommandBase extends Toolbox_1.Toolbox {
+    constructor(client, options) {
         var _a, _b, _c;
+        super({ client });
+        this.client = client;
         this.name = options.name;
         this.description = options.description;
         this.options = (_a = options.options) !== null && _a !== void 0 ? _a : [];
         this.subcommands = (_c = (_b = options.subcommands) === null || _b === void 0 ? void 0 : _b.map(subcommand => subcommand.makeSubcommand())) !== null && _c !== void 0 ? _c : [];
         this.isSubcommand = false;
     }
-    run(optionNames, client, interaction) {
+    run(optionNames, interaction) {
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null;
         optionNames.shift();
         if (!subcommand)
-            this.execute(client, interaction);
+            this.execute(interaction);
         else
-            subcommand.run(optionNames, client, interaction);
+            subcommand.run(optionNames, interaction);
     }
-    execute(client, interaction) {
-        return interaction.reply("This command is missing any code to run!");
+    execute(interaction) {
+        return interaction.reply({ embeds: [this.simpleEmbed("This command is missing an execute function!")] });
     }
     getData() {
-        const { name, description, options, subcommands, isSubcommand } = this;
+        const { name, description, options, subcommands } = this;
         const json = {
             name, description,
             options: [...options.map(option => this.getOptionData(option)), ...subcommands.map(subcommand => subcommand.getData())]
@@ -32,7 +35,7 @@ class SlashCommandBase {
         return json;
     }
     getJSON() {
-        const { name, description, options, subcommands, isSubcommand } = this;
+        const { name, description, options, subcommands } = this;
         const json = {
             name, description,
             options: [...options.map(option => this.getOptionJSON(option)), ...subcommands.map(subcommand => subcommand.getJSON())]

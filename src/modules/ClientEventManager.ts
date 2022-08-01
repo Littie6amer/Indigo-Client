@@ -4,17 +4,25 @@ import { ClientEventManagerOptions } from "./Interfaces";
 import { FileUtilties } from "./FileUtilties";
 
 export class ClientEventManager extends FileUtilties {
-    events: ClientEventBase[];
     client: Client;
     constructor(options: ClientEventManagerOptions) {
         super()
-        this.events = []
         this.client = options.client
-        const folders = options.folders
+        const { events, folders } = options
         if (folders?.length) {
             console.log(`[EventManager] Searching folders: ${folders.join(", ")}`)
             this.registerDirectories(folders)
         }
+        if (events?.length) {
+            console.log(`[EventManager] Adding events: ${events.map(e => e.name).join()}`)
+            this.registerEvents(events)
+        }
+    }
+
+    async importFromFile(filePath: string) {
+        const { default: raw } = await import(filePath).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`))
+        const data: any = Object.getPrototypeOf(raw) ? new raw(this.client) : raw
+        return data
     }
 
     async registerDirectories(folders: string[]) {
@@ -32,21 +40,21 @@ export class ClientEventManager extends FileUtilties {
         if (!events.length) return;
         console.log(`[EventManager] Now listening for: ${events.map(event => event.name).join(", ")}`)
         for (let event in events) {
-            if (!this.events.find(e => e.name == events[event].name)) await this.client.on(events[event].name, (...data: any[]) => this.runEvent(events[event].name, ...data))
-            this.events.push(events[event])
+            if (!this.client.events.find(e => e.name == events[event].name)) await this.client.on(events[event].name, (...data: any[]) => this.runEvent(events[event].name, ...data))
+            this.client.events.push(events[event])
         }
     }
 
     async registerEvent(event: ClientEventBase) {
         console.log(`[EventManager] Now listening for: ${event.name}`)
-        if (!this.events.find(e => e.name == event.name)) await this.client.on(event.name, (...data: any[]) => this.runEvent(event.name, ...data))
-        this.events.push(event)
+        if (!this.client.events.find(e => e.name == event.name)) await this.client.on(event.name, (...data: any[]) => this.runEvent(event.name, ...data))
+        this.client.events.push(event)
     }
 
     async runEvent(name: string, ...data: any[]) {
-        let events: ClientEventBase[] | undefined = this.events.filter(e => e.name == name)
+        let events: ClientEventBase[] | undefined = this.client.events.filter(e => e.name == name)
         if (events.length) events.forEach(event => {
-            event.execute(this.client, ...data)
+            event.execute(...data)
         });
     }
 }

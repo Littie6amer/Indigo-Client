@@ -2,31 +2,35 @@ import { CommandInteraction } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { Client } from "../lib/Client"
 import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandValueOption } from "./Interfaces";
+import { Toolbox } from "../modules/Toolbox";
 
-export class SlashCommandBase {
+export class SlashCommandBase extends Toolbox {
+    client: Client;
     name: string;
     isSubcommand: boolean;
     description: string;
     options: SlashCommandValueOption[];
     subcommands: SlashCommandBase[];
-    constructor(options: SlashCommandOptions) {
+    constructor(client: Client, options: SlashCommandOptions) {
+        super({ client })
+        this.client = client
         this.name = options.name
         this.description = options.description
         this.options = options.options ?? []
         this.subcommands = options.subcommands?.map(subcommand => subcommand.makeSubcommand()) ?? []
         this.isSubcommand = false
     }
-    run(optionNames: string[], client: Client, interaction: CommandInteraction) {
+    run(optionNames: string[], interaction: CommandInteraction) {
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
         optionNames.shift()
-        if (!subcommand) this.execute(client, interaction)
-        else subcommand.run(optionNames, client, interaction)
+        if (!subcommand) this.execute(interaction)
+        else subcommand.run(optionNames, interaction)
     }
-    execute(client: Client, interaction: CommandInteraction): any {
-        return interaction.reply("This command is missing any code to run!")
+    execute(interaction: CommandInteraction): any {
+        return interaction.reply({ embeds: [this.simpleEmbed("This command is missing an execute function!")] })
     }
     getData(): object {
-        const { name, description, options, subcommands, isSubcommand } = this
+        const { name, description, options, subcommands } = this
         const json: any = {
             name, description,
             options: [...options.map(option => this.getOptionData(option)), ...subcommands.map(subcommand => subcommand.getData())]
@@ -35,7 +39,7 @@ export class SlashCommandBase {
         return json as object
     }
     getJSON(): object {
-        const { name, description, options, subcommands, isSubcommand } = this
+        const { name, description, options, subcommands } = this
         const json: any = {
             name, description,
             options: [...options.map(option => this.getOptionJSON(option)), ...subcommands.map(subcommand => subcommand.getJSON())]

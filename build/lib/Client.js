@@ -30,8 +30,7 @@ exports.Client = void 0;
 const DiscordJS = __importStar(require("discord.js"));
 const path_1 = __importDefault(require("path"));
 const __1 = require("..");
-const Toolbox_1 = require("../modules/Toolbox");
-const SlashCommandManager_1 = require("../modules/SlashCommandManager");
+const CommandManager_1 = require("../modules/CommandManager");
 class Client extends DiscordJS.Client {
     constructor(options) {
         var _a, _b, _c;
@@ -40,12 +39,12 @@ class Client extends DiscordJS.Client {
         const eventFolders = ((_b = options.eventFolders) === null || _b === void 0 ? void 0 : _b.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
         if ((options === null || options === void 0 ? void 0 : options.defaultEvents) !== false)
             eventFolders === null || eventFolders === void 0 ? void 0 : eventFolders.push(path_1.default.resolve(__dirname, "../default-events"));
-        this.events = new __1.ClientEventManager({ client: this, folders: eventFolders });
-        this.toolbox = new Toolbox_1.Toolbox();
+        this.eventManager = new __1.ClientEventManager({ client: this, folders: eventFolders, events: options.events });
+        this.events = [];
         const commandFolders = ((_c = options.commandFolders) === null || _c === void 0 ? void 0 : _c.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
-        this.commands = new SlashCommandManager_1.SlashCommandManager({ client: this, folders: commandFolders });
-        if (options === null || options === void 0 ? void 0 : options.events)
-            this.events.registerEvents(options.events);
+        this.commandManager = new CommandManager_1.CommandManager({ client: this, folders: commandFolders });
+        this.commands = [];
+        this.embedColor = options.embedColor || "#4b0082";
     }
 }
 exports.Client = Client;

@@ -32,14 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SlashCommandManager = void 0;
+exports.CommandManager = void 0;
 const SlashCommandBase_1 = require("../bases/SlashCommandBase");
 const FileUtilties_1 = require("./FileUtilties");
-class SlashCommandManager extends FileUtilties_1.FileUtilties {
+class CommandManager extends FileUtilties_1.FileUtilties {
     constructor(options) {
         super();
         this.client = options.client;
-        this.slashcommands = [];
         const folders = options.folders;
         if (folders === null || folders === void 0 ? void 0 : folders.length) {
             console.log(`[SlashCommandManager] Searching folders: ${folders.join(", ")}`);
@@ -71,18 +70,18 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
             if (!slashcommands.length)
                 return;
             for (let slashcommand in slashcommands) {
-                this.slashcommands.push(slashcommands[slashcommand]);
+                this.client.commands.push(slashcommands[slashcommand]);
             }
         });
     }
     registerSlashCommand(slashcommand) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.slashcommands.push(slashcommand);
+            this.client.commands.push(slashcommand);
         });
     }
     run(name, interaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            let slashcommands = this.slashcommands.filter(s => s.name == name);
+            let slashcommands = this.client.commands.filter(s => s.name == name);
             if (slashcommands.length)
                 slashcommands.forEach(slashcommand => {
                     slashcommand.run(getSubcommands(interaction.options.data[0]), interaction);
@@ -98,7 +97,7 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const command = yield ((_a = this.client.application) === null || _a === void 0 ? void 0 : _a.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name));
-            const slashcommand = this.slashcommands.find(s => s.name == name);
+            const slashcommand = this.client.commands.find(s => s.name == name);
             if (!slashcommand)
                 return;
             if (command)
@@ -111,7 +110,7 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const command = yield ((_a = this.client.application) === null || _a === void 0 ? void 0 : _a.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name));
-            const slashcommand = this.slashcommands.find(s => s.name == name);
+            const slashcommand = this.client.commands.find(s => s.name == name);
             if (!slashcommand)
                 return;
             if (command)
@@ -119,13 +118,13 @@ class SlashCommandManager extends FileUtilties_1.FileUtilties {
         });
     }
 }
-exports.SlashCommandManager = SlashCommandManager;
+exports.CommandManager = CommandManager;
 // export class SlashCommandManager {
 //     slashcommands: SlashCommandBase[]
 //     client: Client;
 //     constructor(options: SlashCommandManagerOptions) {
 //         this.client = options.client
-//         this.slashcommands = []
+//         this.client.commands = []
 //         const folders = options.folders
 //         if (folders?.length) {
 //             console.log(`[SlashCommandManager] Searching folders: ${folders.join(", ")}`)
@@ -134,7 +133,7 @@ exports.SlashCommandManager = SlashCommandManager;
 //     }
 //     async _inDev_Deploy(name: string, guildId?: string) {
 //         const command = await this.client.application?.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
-//         const slashcommand = this.slashcommands.find(s => s.name == name)
+//         const slashcommand = this.client.commands.find(s => s.name == name)
 //         if (!slashcommand) return
 //         if (command) this.client.application?.commands.edit(command, slashcommand.getData() as ApplicationCommandDataResolvable).catch()
 //         else this.client.application?.commands.create(slashcommand.getData() as ApplicationCommandDataResolvable, guildId).catch()

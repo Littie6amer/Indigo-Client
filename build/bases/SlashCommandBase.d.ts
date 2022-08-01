@@ -1,15 +1,17 @@
 import { CommandInteraction } from "discord.js";
 import { Client } from "../lib/Client";
 import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandValueOption } from "./Interfaces";
-export declare class SlashCommandBase {
+import { Toolbox } from "../modules/Toolbox";
+export declare class SlashCommandBase extends Toolbox {
+    client: Client;
     name: string;
     isSubcommand: boolean;
     description: string;
     options: SlashCommandValueOption[];
     subcommands: SlashCommandBase[];
-    constructor(options: SlashCommandOptions);
-    run(optionNames: string[], client: Client, interaction: CommandInteraction): void;
-    execute(client: Client, interaction: CommandInteraction): any;
+    constructor(client: Client, options: SlashCommandOptions);
+    run(optionNames: string[], interaction: CommandInteraction): void;
+    execute(interaction: CommandInteraction): any;
     getData(): object;
     getJSON(): object;
     getOptionJSON(option: SlashCommandValueOption): object;

@@ -1,3 +1,4 @@
+import { ClientEventBase } from "../bases/ClientEventBase";
 import { Client } from "../lib/Client";
 export interface SlashCommandManagerOptions {
     client: Client;
@@ -6,4 +7,5 @@ export interface SlashCommandManagerOptions {
 export interface ClientEventManagerOptions {
     client: Client;
     folders?: string[];
+    events?: ClientEventBase[];
 }

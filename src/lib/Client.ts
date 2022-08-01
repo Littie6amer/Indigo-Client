@@ -3,22 +3,26 @@ import path from "path";
 import { ClientEventManager } from "..";
 import { ClientOptions } from "./Interfaces";
 import { Toolbox } from "../modules/Toolbox";
-import { SlashCommandManager } from "../modules/SlashCommandManager";
+import { CommandManager } from "../modules/CommandManager";
+import { ClientEventBase, SlashCommandBase } from "..";
 
 
 export class Client extends DiscordJS.Client {
     rootPath: string = require?.main?.path || ""
-    toolbox: Toolbox;
-    events: ClientEventManager;
-    commands: SlashCommandManager;
+    commandManager: CommandManager;
+    commands: SlashCommandBase[];
+    embedColor: DiscordJS.ColorResolvable;
+    eventManager: ClientEventManager;
+    events: ClientEventBase[];
     constructor(options: ClientOptions) {
         super({ intents: options.intents, ws: { properties: { browser: options.mobileStatus ? "Discord iOS" : undefined } } });
         const eventFolders = options.eventFolders?.map(folder => this.rootPath + path.sep + folder) || []
         if (options?.defaultEvents !== false) eventFolders?.push(path.resolve(__dirname, "../default-events"))
-        this.events = new ClientEventManager({ client: this, folders: eventFolders });
-        this.toolbox = new Toolbox()
+        this.eventManager = new ClientEventManager({ client: this, folders: eventFolders, events: options.events });
+        this.events = []
         const commandFolders = options.commandFolders?.map(folder => this.rootPath + path.sep + folder) || []
-        this.commands = new SlashCommandManager({ client: this, folders: commandFolders })
-        if (options?.events) this.events.registerEvents(options.events)
+        this.commandManager = new CommandManager({ client: this, folders: commandFolders })
+        this.commands = []
+        this.embedColor = options.embedColor || "#4b0082"
     }
 }

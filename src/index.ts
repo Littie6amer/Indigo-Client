@@ -1,9 +1,9 @@
 import { Client } from "./lib/Client"
 import { ClientEventManager } from "./modules/ClientEventManager"
-import { SlashCommandManager } from "./modules/SlashCommandManager"
+import { CommandManager } from "./modules/CommandManager"
 import { ClientEventBase } from "./bases/ClientEventBase"
 import { SlashCommandBase } from "./bases/SlashCommandBase"
 
 export {
-    Client, ClientEventManager, ClientEventBase, SlashCommandBase, SlashCommandManager
+    Client, ClientEventManager, ClientEventBase, SlashCommandBase, CommandManager
 }
