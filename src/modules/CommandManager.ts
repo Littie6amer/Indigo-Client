@@ -1,4 +1,4 @@
-import { CommandInteraction, ApplicationCommandDataResolvable, CommandInteractionOption, CacheType } from "discord.js";
+import { CommandInteraction, ApplicationCommandDataResolvable, CommandInteractionOption, CacheType, PermissionsBitField } from "discord.js";
 import { SlashCommandBase } from "../bases/SlashCommandBase";
 import { Client } from "../lib/Client";
 import { SlashCommandManagerOptions } from "./Interfaces";
@@ -46,9 +46,10 @@ export class CommandManager extends FileUtilties {
     }
 
     async run(name: string, interaction: CommandInteraction) {
-        let slashcommands: SlashCommandBase[] | undefined = this.client.commands.filter(s => s.name == name)
+        const slashcommands: SlashCommandBase[] | undefined = this.client.commands.filter(s => s.name == name)
         if (slashcommands.length) slashcommands.forEach(slashcommand => {
-            slashcommand.run(getSubcommands(interaction.options.data[0]), interaction)
+            const subcommands = getSubcommands(interaction.options.data[0]);            
+            slashcommand.run(subcommands, interaction)
         });
         function getSubcommands (option: CommandInteractionOption<CacheType> | undefined): string[] {
             if (!option?.options) return []
@@ -60,15 +61,15 @@ export class CommandManager extends FileUtilties {
         const command = await this.client.application?.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
         const slashcommand = this.client.commands.find(s => s.name == name)
         if (!slashcommand) return
-        if (command) this.client.application?.commands.edit(command, slashcommand.getData() as ApplicationCommandDataResolvable).catch()
-        else this.client.application?.commands.create(slashcommand.getData() as ApplicationCommandDataResolvable, guildId).catch()
+        if (command) this.client.application?.commands.edit(command, slashcommand.getData() as ApplicationCommandDataResolvable).catch(console.log)
+        else this.client.application?.commands.create(slashcommand.getData() as ApplicationCommandDataResolvable, guildId).catch(console.log)
     }
 
     async _inDev_Delete(name: string, guildId?: string) {
-        const command = await this.client.application?.commands.cache.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
+        const command = (await this.client.application?.commands.fetch())?.filter(c => !guildId || c.guildId == guildId).find(c => c.name == name)
         const slashcommand = this.client.commands.find(s => s.name == name)
         if (!slashcommand) return
-        if (command) this.client.application?.commands.delete(command, guildId).catch()
+        if (command) this.client.application?.commands.delete(command, guildId).catch(console.log)
     }
 }
 

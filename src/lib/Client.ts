@@ -14,6 +14,7 @@ export class Client extends DiscordJS.Client {
     embedColor: DiscordJS.ColorResolvable;
     eventManager: ClientEventManager;
     events: ClientEventBase[];
+    toolbox: Toolbox;
     constructor(options: ClientOptions) {
         super({ intents: options.intents, ws: { properties: { browser: options.mobileStatus ? "Discord iOS" : undefined } } });
         const eventFolders = options.eventFolders?.map(folder => this.rootPath + path.sep + folder) || []
@@ -24,5 +25,6 @@ export class Client extends DiscordJS.Client {
         this.commandManager = new CommandManager({ client: this, folders: commandFolders })
         this.commands = []
         this.embedColor = options.embedColor || "#4b0082"
+        this.toolbox = new Toolbox({ client: this });
     }
 }

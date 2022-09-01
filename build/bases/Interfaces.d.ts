@@ -1,4 +1,4 @@
-import { ClientEvents } from "discord.js";
+import { ClientEvents, PermissionFlags } from "discord.js";
 import { SlashCommandBase } from "./SlashCommandBase";
 export interface ClientEventOptions {
     name: keyof ClientEvents;
@@ -9,6 +9,8 @@ export interface SlashCommandOptions {
     subcommands?: SlashCommandBase[];
     subcommandFolders?: string[];
     options?: SlashCommandValueOption[];
+    bot_permissions?: (keyof PermissionFlags)[];
+    user_permissions?: (keyof PermissionFlags)[];
 }
 export interface SlashCommandValueOption {
     name: string;

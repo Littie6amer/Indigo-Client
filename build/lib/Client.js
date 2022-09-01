@@ -30,6 +30,7 @@ exports.Client = void 0;
 const DiscordJS = __importStar(require("discord.js"));
 const path_1 = __importDefault(require("path"));
 const __1 = require("..");
+const Toolbox_1 = require("../modules/Toolbox");
 const CommandManager_1 = require("../modules/CommandManager");
 class Client extends DiscordJS.Client {
     constructor(options) {
@@ -45,6 +46,7 @@ class Client extends DiscordJS.Client {
         this.commandManager = new CommandManager_1.CommandManager({ client: this, folders: commandFolders });
         this.commands = [];
         this.embedColor = options.embedColor || "#4b0082";
+        this.toolbox = new Toolbox_1.Toolbox({ client: this });
     }
 }
 exports.Client = Client;

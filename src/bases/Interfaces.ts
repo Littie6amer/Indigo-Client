@@ -1,16 +1,31 @@
-import { ClientEvents } from "discord.js";
+import { ClientEvents, PermissionFlags } from "discord.js";
 import { SlashCommandBase } from "./SlashCommandBase";
 
 export interface ClientEventOptions {
     name: keyof ClientEvents
 }
 
+interface Role {
+    id: string, guildId: string
+}
+
 export interface SlashCommandOptions {
     name: string;
     description: string;
     subcommands?: SlashCommandBase[]
-    subcommandFolders?: string[]
     options?: SlashCommandValueOption[]
+    permissions?: {
+        slashcommand?: (keyof PermissionFlags)[]
+        author?: {
+            guild?: (keyof PermissionFlags)[]
+            channel?: (keyof PermissionFlags)[]
+        }
+        bot?: {
+            guild?: (keyof PermissionFlags)[]
+            channel?: (keyof PermissionFlags)[]
+        }
+        allowed_roles: Role[]
+    }
 }
 
 export interface SlashCommandValueOption {

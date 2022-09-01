@@ -1,28 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlashCommandBase = void 0;
-const Toolbox_1 = require("../modules/Toolbox");
-class SlashCommandBase extends Toolbox_1.Toolbox {
+const discord_js_1 = require("discord.js");
+class SlashCommandBase {
     constructor(client, options) {
         var _a, _b, _c;
-        super({ client });
         this.client = client;
         this.name = options.name;
         this.description = options.description;
         this.options = (_a = options.options) !== null && _a !== void 0 ? _a : [];
         this.subcommands = (_c = (_b = options.subcommands) === null || _b === void 0 ? void 0 : _b.map(subcommand => subcommand.makeSubcommand())) !== null && _c !== void 0 ? _c : [];
         this.isSubcommand = false;
+        this.bot_permissions = options.bot_permissions || [];
+        this.user_permissions = options.user_permissions || [];
     }
     run(optionNames, interaction) {
+        var _a, _b, _c, _d, _e, _f;
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null;
         optionNames.shift();
-        if (!subcommand)
+        if (!subcommand) {
+            const userPerms = (_a = interaction.member) === null || _a === void 0 ? void 0 : _a.permissionsIn(((_b = interaction.channel) === null || _b === void 0 ? void 0 : _b.id) || "");
+            const botPerms = (_e = (_c = interaction.guild) === null || _c === void 0 ? void 0 : _c.members.cache.get(((_d = this.client.user) === null || _d === void 0 ? void 0 : _d.id) || "")) === null || _e === void 0 ? void 0 : _e.permissionsIn(((_f = interaction.channel) === null || _f === void 0 ? void 0 : _f.id) || "");
+            if (this.user_permissions && !userPerms.has(this.user_permissions))
+                return interaction.reply({
+                    embeds: [this.client.toolbox.missingPermissionsEmbed(interaction.user, this.user_permissions)]
+                });
+            if (this.bot_permissions && !botPerms.has(this.bot_permissions))
+                return interaction.reply({
+                    // @ts-ignore
+                    embeds: [this.client.toolbox.missingPermissionsEmbed(this.client.user, this.bot_permissions)]
+                });
             this.execute(interaction);
+        }
         else
             subcommand.run(optionNames, interaction);
     }
     execute(interaction) {
-        return interaction.reply({ embeds: [this.simpleEmbed("This command is missing an execute function!")] });
+        return interaction.reply({ embeds: [this.client.toolbox.simpleEmbed("This command is missing an execute function!")] });
     }
     getData() {
         const { name, description, options, subcommands } = this;
@@ -32,6 +46,8 @@ class SlashCommandBase extends Toolbox_1.Toolbox {
         };
         if (this.getType())
             json.type = this.getType();
+        if (this.user_permissions.length)
+            json.default_member_permissions = new discord_js_1.PermissionsBitField(this.user_permissions).bitfield;
         return json;
     }
     getJSON() {
@@ -42,6 +58,8 @@ class SlashCommandBase extends Toolbox_1.Toolbox {
         };
         if (this.getType())
             json.type = this.getType();
+        if (this.user_permissions.length)
+            json.default_member_permissions = new discord_js_1.PermissionsBitField(this.user_permissions).bitfield;
         return json;
     }
     getOptionJSON(option) {

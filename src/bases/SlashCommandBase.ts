@@ -1,9 +1,8 @@
-import { CommandInteraction } from "discord.js"
+import { CommandInteraction, GuildMember, PermissionFlags, PermissionsBitField } from "discord.js"
 import { Client } from "../lib/Client"
 import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandValueOption } from "./Interfaces";
-import { Toolbox } from "../modules/Toolbox";
 
-export class SlashCommandBase extends Toolbox {
+export class SlashCommandBase {
     client: Client;
     name: string;
     isSubcommand: boolean;
@@ -11,7 +10,6 @@ export class SlashCommandBase extends Toolbox {
     options: SlashCommandValueOption[];
     subcommands: SlashCommandBase[];
     constructor(client: Client, options: SlashCommandOptions) {
-        super({ client })
         this.client = client
         this.name = options.name
         this.description = options.description
@@ -22,11 +20,21 @@ export class SlashCommandBase extends Toolbox {
     run(optionNames: string[], interaction: CommandInteraction) {
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
         optionNames.shift()
-        if (!subcommand) this.execute(interaction)
-        else subcommand.run(optionNames, interaction)
+        if (!subcommand) {
+            //     const userPerms = (interaction.member as GuildMember)?.permissionsIn(interaction.channel?.id || "") as Readonly<PermissionsBitField>
+            //     const botPerms = (interaction.guild?.members.cache.get(this.client.user?.id || "") as GuildMember)?.permissionsIn(interaction.channel?.id || "") as Readonly<PermissionsBitField>
+            //     if (this.user_permissions && !userPerms.has(this.user_permissions)) return interaction.reply({
+            //         embeds: [this.client.toolbox.missingPermissionsEmbed(interaction.user, this.user_permissions)]
+            //     })
+            //     if (this.bot_permissions && !botPerms.has(this.bot_permissions)) return interaction.reply({
+            //         // @ts-ignore
+            //         embeds: [this.client.toolbox.missingPermissionsEmbed(this.client.user, this.bot_permissions)]
+            //     })
+            //     this.execute(interaction)
+        } else subcommand.run(optionNames, interaction)
     }
     execute(interaction: CommandInteraction): any {
-        return interaction.reply({ embeds: [this.simpleEmbed("This command is missing an execute function!")] })
+        return interaction.reply({ embeds: [this.client.toolbox.simpleEmbed("This command is missing an execute function!")] })
     }
     getData(): object {
         const { name, description, options, subcommands } = this
@@ -35,6 +43,7 @@ export class SlashCommandBase extends Toolbox {
             options: [...options.map(option => this.getOptionData(option)), ...subcommands.map(subcommand => subcommand.getData())]
         }
         if (this.getType()) json.type = this.getType()
+        //if (this.user_permissions.length) json.default_member_permissions = new PermissionsBitField(this.user_permissions).bitfield
         return json as object
     }
     getJSON(): object {
@@ -44,6 +53,7 @@ export class SlashCommandBase extends Toolbox {
             options: [...options.map(option => this.getOptionJSON(option)), ...subcommands.map(subcommand => subcommand.getJSON())]
         }
         if (this.getType()) json.type = this.getType()
+        //if (this.user_permissions.length) json.default_member_permissions = new PermissionsBitField(this.user_permissions).bitfield
         return json as object
     }
     getOptionJSON(option: SlashCommandValueOption): object {
@@ -59,7 +69,7 @@ export class SlashCommandBase extends Toolbox {
     }
     getOptionData(option: SlashCommandValueOption): object {
         const { name, description, required, choices, channel_types, min_value, max_value, autocomplete } = option
-        const type = this.getOptionTypeValue(option.type); 
+        const type = this.getOptionTypeValue(option.type);
         const json: any = { name, description, type }
         if (required) json.required = required
         if (choices) json.choices = choices
@@ -70,7 +80,7 @@ export class SlashCommandBase extends Toolbox {
         return json as object
     }
     getOptionTypeValue(type: SlashCommandOptionChannelTypes | SlashCommandOptionTypes) {
-        const typeValues = { 
+        const typeValues = {
             "STRING": 3, "INTEGER": 4, "BOOLEAN": 5, "USER": 6,
             "CHANNEL": 7, "ROLE": 8, "MENTIONABLE": 9, "NUMBER": 10,
             "ATTACHMENT": 11, "GUILD_TEXT": 0, "DM": 1, "GUILD_VOICE": 2,
