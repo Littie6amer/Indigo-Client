@@ -3,8 +3,7 @@ import { SlashCommandBase } from "../bases/SlashCommandBase";
 import { Client } from "../lib/Client";
 import { SlashCommandManagerOptions } from "./Interfaces";
 import { FileUtilties } from "./FileUtilties";
-export declare class SlashCommandManager extends FileUtilties {
-    slashcommands: SlashCommandBase[];
+export declare class CommandManager extends FileUtilties {
     client: Client;
     constructor(options: SlashCommandManagerOptions);
     importFromFile(filePath: string): Promise<any>;

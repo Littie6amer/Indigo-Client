@@ -3,10 +3,12 @@ import { ClientEventOptions } from "./Interfaces";
 
 export class ClientEventBase {
     name: string;
-    constructor(options: ClientEventOptions) {
+    client: Client;
+    constructor(client: Client, options: ClientEventOptions) {
+        this.client = client
         this.name = options.name
     }
-    execute(client: Client, ...data: any[]) {
+    execute(...data: any[]) {
         console.log(`[${this.name}] No execute function set!`)
     }
 }

@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ClientEventBase_1 = require("../bases/ClientEventBase");
 class Event extends ClientEventBase_1.ClientEventBase {
-    constructor() {
-        super({ name: "interactionCreate" });
+    constructor(client) {
+        super(client, { name: "interactionCreate" });
     }
-    execute(client, interaction) {
+    execute(interaction) {
         if (interaction.isChatInputCommand())
-            client.commands.run(interaction.commandName, interaction);
+            this.client.commandManager.run(interaction.commandName, interaction);
     }
 }
 exports.default = Event;

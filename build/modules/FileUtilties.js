@@ -77,7 +77,7 @@ class FileUtilties {
     importFromFile(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
             const { default: raw } = yield Promise.resolve().then(() => __importStar(require(filePath))).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`));
-            const data = Object.getPrototypeOf(raw) ? new raw : raw;
+            const data = Object.getPrototypeOf(raw) ? new raw() : raw;
             return data;
         });
     }

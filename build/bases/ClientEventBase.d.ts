@@ -2,6 +2,7 @@ import { Client } from "..";
 import { ClientEventOptions } from "./Interfaces";
 export declare class ClientEventBase {
     name: string;
-    constructor(options: ClientEventOptions);
-    execute(client: Client, ...data: any[]): void;
+    client: Client;
+    constructor(client: Client, options: ClientEventOptions);
+    execute(...data: any[]): void;
 }

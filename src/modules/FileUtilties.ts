@@ -33,7 +33,7 @@ export class FileUtilties {
 
     async importFromFile(filePath: string) {
         const { default: raw } = await import(filePath).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`))
-        const data: any = Object.getPrototypeOf(raw) ? new raw : raw
+        const data: any = Object.getPrototypeOf(raw) ? new raw() : raw
         return data
     }
 

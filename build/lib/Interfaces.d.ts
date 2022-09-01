@@ -1,4 +1,4 @@
-import { BitFieldResolvable, GatewayIntentsString } from "discord.js";
+import { BitFieldResolvable, ColorResolvable, GatewayIntentsString } from "discord.js";
 import { ClientEventBase } from "..";
 export interface ClientOptions {
     eventFolders?: string[];
@@ -7,4 +7,5 @@ export interface ClientOptions {
     defaultEvents?: boolean;
     intents: BitFieldResolvable<GatewayIntentsString, number>;
     mobileStatus?: boolean;
+    embedColor?: ColorResolvable;
 }

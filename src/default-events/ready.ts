@@ -1,12 +1,12 @@
 import { Client, ClientEventBase } from ".."
 
 export default class Event extends ClientEventBase {
-    constructor () {
-        super({ name: "ready" })
+    constructor (client: Client) {
+        super(client, { name: "ready" })
     }
 
-    execute(client: Client) {
-        console.log(`[${this.name}] Logged in as ${client.user?.tag}!`)
-        console.log(`[${this.name}] Watching ${client.guilds.cache.size} servers!`)
+    execute() {
+        console.log(`[${this.name}] Logged in as ${this.client.user?.tag}!`)
+        console.log(`[${this.name}] Watching ${this.client.guilds.cache.size} servers!`)
     }
 }

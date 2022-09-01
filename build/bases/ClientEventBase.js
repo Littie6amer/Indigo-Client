@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientEventBase = void 0;
 class ClientEventBase {
-    constructor(options) {
+    constructor(client, options) {
+        this.client = client;
         this.name = options.name;
     }
-    execute(client, ...data) {
+    execute(...data) {
         console.log(`[${this.name}] No execute function set!`);
     }
 }

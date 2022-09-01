@@ -9,6 +9,7 @@ export interface SlashCommandOptions {
     name: string;
     description: string;
     subcommands?: SlashCommandBase[]
+    subcommandFolders?: string[]
     options?: SlashCommandValueOption[]
 }
 
