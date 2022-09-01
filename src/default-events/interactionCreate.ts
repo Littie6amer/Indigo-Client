@@ -8,6 +8,6 @@ export default class Event extends ClientEventBase {
     }
 
     execute(interaction: Interaction): void {
-        if (interaction.isChatInputCommand()) this.client.commandManager.run(interaction.commandName, interaction)
+        if (interaction.guild && interaction.isChatInputCommand()) this.client.commandManager.run(interaction.commandName, interaction)
     }
 }

@@ -6,7 +6,7 @@ class Event extends ClientEventBase_1.ClientEventBase {
         super(client, { name: "interactionCreate" });
     }
     execute(interaction) {
-        if (interaction.isChatInputCommand())
+        if (interaction.guild && interaction.isChatInputCommand())
             this.client.commandManager.run(interaction.commandName, interaction);
     }
 }

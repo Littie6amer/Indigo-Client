@@ -46,10 +46,13 @@ class CommandManager extends FileUtilties_1.FileUtilties {
         }
     }
     importFromFile(filePath) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { default: raw } = yield Promise.resolve().then(() => __importStar(require(filePath))).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`));
-            const data = Object.getPrototypeOf(raw) ? new raw(this.client) : raw;
-            return data;
+            const fileData = yield Promise.resolve().then(() => __importStar(require(filePath))).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`));
+            let slashCommand = null;
+            if (fileData && fileData.Command && ((_a = fileData.Command) === null || _a === void 0 ? void 0 : _a.prototype) instanceof SlashCommandBase_1.SlashCommandBase)
+                slashCommand = new fileData.Command(this.client);
+            return slashCommand;
         });
     }
     registerDirectories(folders) {

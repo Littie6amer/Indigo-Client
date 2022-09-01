@@ -3,14 +3,23 @@ import { SlashCommandBase } from "./SlashCommandBase";
 export interface ClientEventOptions {
     name: keyof ClientEvents;
 }
+export interface SlashCommandPermissions {
+    slashcommand?: (keyof PermissionFlags)[];
+    author?: {
+        guild?: (keyof PermissionFlags)[];
+        channel?: (keyof PermissionFlags)[];
+    };
+    bot?: {
+        guild?: (keyof PermissionFlags)[];
+        channel?: (keyof PermissionFlags)[];
+    };
+}
 export interface SlashCommandOptions {
     name: string;
     description: string;
     subcommands?: SlashCommandBase[];
-    subcommandFolders?: string[];
     options?: SlashCommandValueOption[];
-    bot_permissions?: (keyof PermissionFlags)[];
-    user_permissions?: (keyof PermissionFlags)[];
+    permissions?: SlashCommandPermissions;
 }
 export interface SlashCommandValueOption {
     name: string;

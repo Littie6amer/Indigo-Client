@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlashCommandBase = void 0;
-const discord_js_1 = require("discord.js");
 class SlashCommandBase {
     constructor(client, options) {
         var _a, _b, _c;
@@ -11,29 +10,47 @@ class SlashCommandBase {
         this.options = (_a = options.options) !== null && _a !== void 0 ? _a : [];
         this.subcommands = (_c = (_b = options.subcommands) === null || _b === void 0 ? void 0 : _b.map(subcommand => subcommand.makeSubcommand())) !== null && _c !== void 0 ? _c : [];
         this.isSubcommand = false;
-        this.bot_permissions = options.bot_permissions || [];
-        this.user_permissions = options.user_permissions || [];
+        this.required_permissions = options.permissions;
     }
     run(optionNames, interaction) {
-        var _a, _b, _c, _d, _e, _f;
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null;
         optionNames.shift();
         if (!subcommand) {
-            const userPerms = (_a = interaction.member) === null || _a === void 0 ? void 0 : _a.permissionsIn(((_b = interaction.channel) === null || _b === void 0 ? void 0 : _b.id) || "");
-            const botPerms = (_e = (_c = interaction.guild) === null || _c === void 0 ? void 0 : _c.members.cache.get(((_d = this.client.user) === null || _d === void 0 ? void 0 : _d.id) || "")) === null || _e === void 0 ? void 0 : _e.permissionsIn(((_f = interaction.channel) === null || _f === void 0 ? void 0 : _f.id) || "");
-            if (this.user_permissions && !userPerms.has(this.user_permissions))
-                return interaction.reply({
-                    embeds: [this.client.toolbox.missingPermissionsEmbed(interaction.user, this.user_permissions)]
-                });
-            if (this.bot_permissions && !botPerms.has(this.bot_permissions))
-                return interaction.reply({
-                    // @ts-ignore
-                    embeds: [this.client.toolbox.missingPermissionsEmbed(this.client.user, this.bot_permissions)]
-                });
-            this.execute(interaction);
+            let passed = this.permissionCheck(interaction).passed && this.prechecks(interaction).passed;
+            if (passed)
+                this.execute(interaction);
+            else
+                return;
         }
         else
             subcommand.run(optionNames, interaction);
+    }
+    permissionCheck(interaction) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        if (!this.required_permissions || ((_a = interaction.channel) === null || _a === void 0 ? void 0 : _a.isDMBased()))
+            return { passed: true };
+        const required_author_permissions = this.required_permissions.author;
+        const required_bot_permissions = this.required_permissions.author;
+        const author = interaction.member;
+        const bot = (_b = interaction.guild) === null || _b === void 0 ? void 0 : _b.members.cache.get(((_c = this.client.user) === null || _c === void 0 ? void 0 : _c.id) || "");
+        if ((required_author_permissions === null || required_author_permissions === void 0 ? void 0 : required_author_permissions.guild) && !author.permissions.has(required_author_permissions.guild)) {
+            (_d = interaction.channel) === null || _d === void 0 ? void 0 : _d.send("invalid author guild perms");
+        }
+        // @ts-ignore
+        if ((required_author_permissions === null || required_author_permissions === void 0 ? void 0 : required_author_permissions.channel) && !((_e = interaction.channel) === null || _e === void 0 ? void 0 : _e.permissionsFor(author.id).has(required_author_permissions.channel))) {
+            (_f = interaction.channel) === null || _f === void 0 ? void 0 : _f.send("invalid author channel perms");
+        }
+        if ((required_bot_permissions === null || required_bot_permissions === void 0 ? void 0 : required_bot_permissions.guild) && !bot.permissions.has(required_bot_permissions.guild)) {
+            (_g = interaction.channel) === null || _g === void 0 ? void 0 : _g.send("invalid bot guild perms");
+        }
+        // @ts-ignore
+        if ((required_bot_permissions === null || required_bot_permissions === void 0 ? void 0 : required_bot_permissions.channel) && !((_h = interaction.channel) === null || _h === void 0 ? void 0 : _h.permissionsFor(bot.id).has(required_bot_permissions.channel))) {
+            (_j = interaction.channel) === null || _j === void 0 ? void 0 : _j.send("invalid bot channel perms");
+        }
+        return { passed: true };
+    }
+    prechecks(interaction) {
+        return { passed: true };
     }
     execute(interaction) {
         return interaction.reply({ embeds: [this.client.toolbox.simpleEmbed("This command is missing an execute function!")] });
@@ -46,8 +63,7 @@ class SlashCommandBase {
         };
         if (this.getType())
             json.type = this.getType();
-        if (this.user_permissions.length)
-            json.default_member_permissions = new discord_js_1.PermissionsBitField(this.user_permissions).bitfield;
+        //if (this.user_permissions.length) json.default_member_permissions = new PermissionsBitField(this.user_permissions).bitfield
         return json;
     }
     getJSON() {
@@ -58,8 +74,7 @@ class SlashCommandBase {
         };
         if (this.getType())
             json.type = this.getType();
-        if (this.user_permissions.length)
-            json.default_member_permissions = new discord_js_1.PermissionsBitField(this.user_permissions).bitfield;
+        //if (this.user_permissions.length) json.default_member_permissions = new PermissionsBitField(this.user_permissions).bitfield
         return json;
     }
     getOptionJSON(option) {

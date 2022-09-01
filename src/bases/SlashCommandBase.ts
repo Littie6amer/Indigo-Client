@@ -1,6 +1,6 @@
-import { CommandInteraction, GuildMember, PermissionFlags, PermissionsBitField } from "discord.js"
+import { Channel, channelLink, CommandInteraction, GuildMember, PermissionsBitField } from "discord.js"
 import { Client } from "../lib/Client"
-import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandValueOption } from "./Interfaces";
+import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandPermissions, SlashCommandValueOption } from "./Interfaces";
 
 export class SlashCommandBase {
     client: Client;
@@ -9,6 +9,7 @@ export class SlashCommandBase {
     description: string;
     options: SlashCommandValueOption[];
     subcommands: SlashCommandBase[];
+    required_permissions?: SlashCommandPermissions;
     constructor(client: Client, options: SlashCommandOptions) {
         this.client = client
         this.name = options.name
@@ -16,22 +17,41 @@ export class SlashCommandBase {
         this.options = options.options ?? []
         this.subcommands = options.subcommands?.map(subcommand => subcommand.makeSubcommand()) ?? []
         this.isSubcommand = false
+        this.required_permissions = options.permissions
     }
     run(optionNames: string[], interaction: CommandInteraction) {
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
         optionNames.shift()
         if (!subcommand) {
-            //     const userPerms = (interaction.member as GuildMember)?.permissionsIn(interaction.channel?.id || "") as Readonly<PermissionsBitField>
-            //     const botPerms = (interaction.guild?.members.cache.get(this.client.user?.id || "") as GuildMember)?.permissionsIn(interaction.channel?.id || "") as Readonly<PermissionsBitField>
-            //     if (this.user_permissions && !userPerms.has(this.user_permissions)) return interaction.reply({
-            //         embeds: [this.client.toolbox.missingPermissionsEmbed(interaction.user, this.user_permissions)]
-            //     })
-            //     if (this.bot_permissions && !botPerms.has(this.bot_permissions)) return interaction.reply({
-            //         // @ts-ignore
-            //         embeds: [this.client.toolbox.missingPermissionsEmbed(this.client.user, this.bot_permissions)]
-            //     })
-            //     this.execute(interaction)
+            let passed = this.permissionCheck(interaction).passed && this.prechecks(interaction).passed
+            if (passed) this.execute(interaction)
+            else return;
         } else subcommand.run(optionNames, interaction)
+    }
+    permissionCheck(interaction: CommandInteraction): { passed: true | false } {
+        if (!this.required_permissions || interaction.channel?.isDMBased()) return { passed: true }
+        const required_author_permissions = this.required_permissions.author
+        const required_bot_permissions = this.required_permissions.author
+        const author = interaction.member as GuildMember
+        const bot = interaction.guild?.members.cache.get(this.client.user?.id||"") as GuildMember
+        if (required_author_permissions?.guild && !author.permissions.has(required_author_permissions.guild)) {
+            interaction.channel?.send("invalid author guild perms")
+        }
+        // @ts-ignore
+        if (required_author_permissions?.channel && !interaction.channel?.permissionsFor(author.id).has(required_author_permissions.channel)) {
+            interaction.channel?.send("invalid author channel perms")
+        }
+        if (required_bot_permissions?.guild && !bot.permissions.has(required_bot_permissions.guild)) {
+            interaction.channel?.send("invalid bot guild perms")
+        }
+        // @ts-ignore
+        if (required_bot_permissions?.channel && !interaction.channel?.permissionsFor(bot.id).has(required_bot_permissions.channel)) {
+            interaction.channel?.send("invalid bot channel perms")
+        }
+        return { passed: true }
+    }
+    prechecks(interaction: CommandInteraction): { passed: true | false } {
+        return { passed: true }
     }
     execute(interaction: CommandInteraction): any {
         return interaction.reply({ embeds: [this.client.toolbox.simpleEmbed("This command is missing an execute function!")] })

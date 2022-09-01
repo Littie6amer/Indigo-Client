@@ -18,9 +18,10 @@ export class CommandManager extends FileUtilties {
     }
 
     async importFromFile(filePath: string) {
-        const { default: raw } = await import(filePath).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`))
-        const data: any = Object.getPrototypeOf(raw) ? new raw(this.client) : raw
-        return data
+        const fileData = await import(filePath).catch((err) => console.log(`[FileUtilties] Unable to import ${filePath}\n${err}`))
+        let slashCommand = null
+        if (fileData && fileData.Command && fileData.Command?.prototype instanceof SlashCommandBase) slashCommand = new fileData.Command(this.client)
+        return slashCommand
     }
 
     async registerDirectories(folders: string[]) {

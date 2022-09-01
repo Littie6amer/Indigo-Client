@@ -5,8 +5,16 @@ export interface ClientEventOptions {
     name: keyof ClientEvents
 }
 
-interface Role {
-    id: string, guildId: string
+export interface SlashCommandPermissions {
+    slashcommand?: (keyof PermissionFlags)[]
+    author?: {
+        guild?: (keyof PermissionFlags)[]
+        channel?: (keyof PermissionFlags)[]
+    }
+    bot?: {
+        guild?: (keyof PermissionFlags)[]
+        channel?: (keyof PermissionFlags)[]
+    }
 }
 
 export interface SlashCommandOptions {
@@ -14,18 +22,7 @@ export interface SlashCommandOptions {
     description: string;
     subcommands?: SlashCommandBase[]
     options?: SlashCommandValueOption[]
-    permissions?: {
-        slashcommand?: (keyof PermissionFlags)[]
-        author?: {
-            guild?: (keyof PermissionFlags)[]
-            channel?: (keyof PermissionFlags)[]
-        }
-        bot?: {
-            guild?: (keyof PermissionFlags)[]
-            channel?: (keyof PermissionFlags)[]
-        }
-        allowed_roles: Role[]
-    }
+    permissions?: SlashCommandPermissions
 }
 
 export interface SlashCommandValueOption {
