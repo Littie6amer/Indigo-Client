@@ -10,10 +10,10 @@ export declare class SlashCommandBase {
     subcommands: SlashCommandBase[];
     required_permissions?: SlashCommandPermissions;
     constructor(client: Client, options: SlashCommandOptions);
-    run(optionNames: string[], interaction: CommandInteraction): void;
-    permissionCheck(interaction: CommandInteraction): {
+    run(optionNames: string[], interaction: CommandInteraction): Promise<void>;
+    permissionCheck(interaction: CommandInteraction): Promise<{
         passed: true | false;
-    };
+    }>;
     prechecks(interaction: CommandInteraction): {
         passed: true | false;
     };

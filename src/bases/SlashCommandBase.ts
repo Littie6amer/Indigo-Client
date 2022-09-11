@@ -1,4 +1,4 @@
-import { Channel, channelLink, CommandInteraction, GuildMember, PermissionsBitField } from "discord.js"
+import { Channel, channelLink, CommandInteraction, EmbedBuilder, GuildMember, PermissionFlags, PermissionsBitField } from "discord.js"
 import { Client } from "../lib/Client"
 import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandPermissions, SlashCommandValueOption } from "./Interfaces";
 
@@ -19,36 +19,76 @@ export class SlashCommandBase {
         this.isSubcommand = false
         this.required_permissions = options.permissions
     }
-    run(optionNames: string[], interaction: CommandInteraction) {
+    async run(optionNames: string[], interaction: CommandInteraction) {
         const subcommand = optionNames.length ? this.subcommands.find(subcommand => subcommand.name == optionNames[0]) : null
         optionNames.shift()
         if (!subcommand) {
-            let passed = this.permissionCheck(interaction).passed && this.prechecks(interaction).passed
+            let passed = (await this.permissionCheck(interaction)).passed && this.prechecks(interaction).passed
             if (passed) this.execute(interaction)
             else return;
         } else subcommand.run(optionNames, interaction)
     }
-    permissionCheck(interaction: CommandInteraction): { passed: true | false } {
-        if (!this.required_permissions || interaction.channel?.isDMBased()) return { passed: true }
+    async permissionCheck(interaction: CommandInteraction): Promise<{ passed: true | false }> {
+        let passed = true
+        if (!this.required_permissions || interaction.channel?.isDMBased()) return { passed }
+
         const required_author_permissions = this.required_permissions.author
-        const required_bot_permissions = this.required_permissions.author
+        const required_bot_permissions = this.required_permissions.bot
         const author = interaction.member as GuildMember
-        const bot = interaction.guild?.members.cache.get(this.client.user?.id||"") as GuildMember
-        if (required_author_permissions?.guild && !author.permissions.has(required_author_permissions.guild)) {
-            interaction.channel?.send("invalid author guild perms")
+        const bot = interaction.guild?.members.cache.get(this.client.user?.id || "") as GuildMember
+
+        const missing_permissions: {
+            [index: string]: { channel?: (keyof PermissionFlags)[], guild?: (keyof PermissionFlags)[] }
+        } = {}
+
+        const checkChannelPermissions = (member: GuildMember, perms?: (keyof PermissionFlags)[]) => {
+            if (!perms?.length) return;
+
+            // @ts-ignore
+            const channel_perms = interaction.channel?.permissionsFor(member.id)
+            perms = perms.filter(p => !channel_perms.has(p))
+
+            if (!perms.length) return;
+
+            passed = false
+            missing_permissions[member.id] = { ...(missing_permissions[member.id] || {}), channel: perms }
         }
-        // @ts-ignore
-        if (required_author_permissions?.channel && !interaction.channel?.permissionsFor(author.id).has(required_author_permissions.channel)) {
-            interaction.channel?.send("invalid author channel perms")
+
+        const checkGuildPermissions = (member: GuildMember, perms?: (keyof PermissionFlags)[]) => {
+            if (!perms?.length) return;
+
+            // @ts-ignore
+            const guild_perms = member.permissions
+            perms = perms.filter(p => !guild_perms.has(p))
+
+            if (!perms.length) return;
+
+            passed = false
+            missing_permissions[member.id] = { ...(missing_permissions[member.id] || {}), guild: perms }
         }
-        if (required_bot_permissions?.guild && !bot.permissions.has(required_bot_permissions.guild)) {
-            interaction.channel?.send("invalid bot guild perms")
+
+        checkGuildPermissions(author, required_author_permissions?.guild)
+        checkChannelPermissions(author, required_author_permissions?.channel)
+        checkGuildPermissions(bot, required_bot_permissions?.guild)
+        checkChannelPermissions(bot, required_bot_permissions?.channel)
+
+        for (let userId in missing_permissions) {
+            const perms = missing_permissions[userId]
+            const member = userId === bot.id ? bot : author
+            const fields: {name: string, value: string}[] = []
+            if (perms.guild) fields.push({ name: `${interaction.guild?.name} (This Server)`, value: "> `"+perms.guild.join("`\n> `")+"`"})
+            // @ts-ignore
+            if (perms.channel) fields.push({ name: `# ${interaction.channel.name} (This Channel)`, value: "> `"+perms.channel.join("`\n> `")+"`"})
+            const embed = new EmbedBuilder()
+                .setAuthor({ name: `${member.user.username}` })
+                .setDescription(`Missing perms.`)
+                .setFields(fields)
+                .setColor(this.client.embedColor)
+            const message = { embeds: [embed] }
+            member === bot && missing_permissions[author.id] ? (await interaction.fetchReply()).reply(message) : interaction.reply(message)
         }
-        // @ts-ignore
-        if (required_bot_permissions?.channel && !interaction.channel?.permissionsFor(bot.id).has(required_bot_permissions.channel)) {
-            interaction.channel?.send("invalid bot channel perms")
-        }
-        return { passed: true }
+
+        return { passed }
     }
     prechecks(interaction: CommandInteraction): { passed: true | false } {
         return { passed: true }
