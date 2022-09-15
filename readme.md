@@ -14,7 +14,7 @@ A package that extends discord.js's client and focuses on additional utility, qu
 
 Indigo Client uses discord.js v14 and be installed with the command:
 ```
-npm i https://github.com/Littie6amer/Indigo-Client discord.js@^14.1.2
+npm i https://github.com/Littie6amer/Indigo-Client discord.js@^14.3.0
 ```
 
 ## Creating a bot client
