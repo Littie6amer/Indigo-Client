@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommandManager = exports.SlashCommandBase = exports.ClientEventBase = exports.ClientEventManager = exports.Client = void 0;
+exports.CommandContext = exports.CommandManager = exports.SlashCommandBase = exports.ClientEventBase = exports.ClientEventManager = exports.Client = void 0;
 const Client_1 = require("./lib/Client");
 Object.defineProperty(exports, "Client", { enumerable: true, get: function () { return Client_1.Client; } });
 const ClientEventManager_1 = require("./modules/ClientEventManager");
@@ -11,3 +11,5 @@ const ClientEventBase_1 = require("./bases/ClientEventBase");
 Object.defineProperty(exports, "ClientEventBase", { enumerable: true, get: function () { return ClientEventBase_1.ClientEventBase; } });
 const SlashCommandBase_1 = require("./bases/SlashCommandBase");
 Object.defineProperty(exports, "SlashCommandBase", { enumerable: true, get: function () { return SlashCommandBase_1.SlashCommandBase; } });
+const CommandContext_1 = require("./bases/CommandContext");
+Object.defineProperty(exports, "CommandContext", { enumerable: true, get: function () { return CommandContext_1.CommandContext; } });

@@ -3,23 +3,18 @@ import { SlashCommandBase } from "./SlashCommandBase";
 export interface ClientEventOptions {
     name: keyof ClientEvents;
 }
-export interface SlashCommandPermissions {
-    slashcommand?: (keyof PermissionFlags)[];
-    author?: {
-        guild?: (keyof PermissionFlags)[];
-        channel?: (keyof PermissionFlags)[];
-    };
-    bot?: {
-        guild?: (keyof PermissionFlags)[];
-        channel?: (keyof PermissionFlags)[];
-    };
+export declare type GuildPermissionFlag = "a" | "b";
+export interface Permissions {
+    author?: (keyof PermissionFlags)[];
+    bot?: (keyof PermissionFlags)[];
 }
 export interface SlashCommandOptions {
     name: string;
     description: string;
     subcommands?: SlashCommandBase[];
     options?: SlashCommandValueOption[];
-    permissions?: SlashCommandPermissions;
+    required_channel_permissions?: Permissions;
+    required_guild_permissions?: Permissions;
 }
 export interface SlashCommandValueOption {
     name: string;
@@ -29,6 +24,7 @@ export interface SlashCommandValueOption {
     autocomplete?: boolean;
     choices?: SlashCommandValueOptionChoice[];
     channel_types?: SlashCommandOptionChannelTypes[];
+    required_channel_permissions?: Permissions;
     min_value?: number;
     max_value?: number;
 }

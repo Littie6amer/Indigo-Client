@@ -4,6 +4,7 @@ import { Client } from "../lib/Client";
 import { SlashCommandManagerOptions } from "./Interfaces";
 import { FileUtilties } from "./FileUtilties";
 import { Toolbox } from "./Toolbox";
+import { CommandContext } from "../bases/CommandContext";
 
 export class CommandManager extends FileUtilties {
     client: Client;
@@ -49,8 +50,9 @@ export class CommandManager extends FileUtilties {
     async run(name: string, interaction: CommandInteraction) {
         const slashcommands: SlashCommandBase[] | undefined = this.client.commands.filter(s => s.name == name)
         if (slashcommands.length) slashcommands.forEach(slashcommand => {
-            const subcommands = getSubcommands(interaction.options.data[0]);            
-            slashcommand.run(subcommands, interaction)
+            const subcommands = getSubcommands(interaction.options.data[0]);      
+            const ctx = new CommandContext(interaction)      
+            slashcommand.run(subcommands, ctx)
         });
         function getSubcommands (option: CommandInteractionOption<CacheType> | undefined): string[] {
             if (!option?.options) return []

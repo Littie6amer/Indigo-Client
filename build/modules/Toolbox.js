@@ -11,12 +11,5 @@ class Toolbox {
             .setColor(this.client.embedColor)
             .setDescription(text);
     }
-    missingPermissionsEmbed(target, permissions) {
-        return new discord_js_1.EmbedBuilder()
-            .setAuthor({ name: target.username, iconURL: target.avatarURL() || undefined })
-            .setDescription(`${target.tag} is missing a few permissions.`)
-            .addFields({ name: "Missing Permissions", value: permissions.map(p => `> ${p}`).join("\n") })
-            .setColor(this.client.embedColor);
-    }
 }
 exports.Toolbox = Toolbox;

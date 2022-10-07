@@ -1,6 +1,6 @@
-import { CommandInteraction } from "discord.js";
 import { Client } from "../lib/Client";
-import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, SlashCommandPermissions, SlashCommandValueOption } from "./Interfaces";
+import { CommandContext } from "./CommandContext";
+import { SlashCommandOptionChannelTypes, SlashCommandOptions, SlashCommandOptionTypes, Permissions, SlashCommandValueOption } from "./Interfaces";
 export declare class SlashCommandBase {
     client: Client;
     name: string;
@@ -8,16 +8,13 @@ export declare class SlashCommandBase {
     description: string;
     options: SlashCommandValueOption[];
     subcommands: SlashCommandBase[];
-    required_permissions?: SlashCommandPermissions;
-    constructor(client: Client, options: SlashCommandOptions);
-    run(optionNames: string[], interaction: CommandInteraction): Promise<void>;
-    permissionCheck(interaction: CommandInteraction): Promise<{
-        passed: true | false;
-    }>;
-    prechecks(interaction: CommandInteraction): {
-        passed: true | false;
+    required_permissions?: {
+        guild?: Permissions;
+        channel?: Permissions;
     };
-    execute(interaction: CommandInteraction): any;
+    constructor(client: Client, options: SlashCommandOptions);
+    run(optionNames: string[], ctx: CommandContext): Promise<void>;
+    execute(ctx: CommandContext): any;
     getData(): object;
     getJSON(): object;
     getOptionJSON(option: SlashCommandValueOption): object;

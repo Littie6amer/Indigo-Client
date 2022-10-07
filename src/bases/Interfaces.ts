@@ -1,20 +1,17 @@
-import { ClientEvents, PermissionFlags } from "discord.js";
+import { ChannelPermissionConstant, ClientEvents, PermissionFlags } from "discord.js";
 import { SlashCommandBase } from "./SlashCommandBase";
 
 export interface ClientEventOptions {
     name: keyof ClientEvents
 }
 
-export interface SlashCommandPermissions {
-    slashcommand?: (keyof PermissionFlags)[]
-    author?: {
-        guild?: (keyof PermissionFlags)[]
-        channel?: (keyof PermissionFlags)[]
-    }
-    bot?: {
-        guild?: (keyof PermissionFlags)[]
-        channel?: (keyof PermissionFlags)[]
-    }
+export type GuildPermissionFlag =
+    "a" |
+    "b"
+
+export interface Permissions {
+    author?: (keyof PermissionFlags)[]
+    bot?: (keyof PermissionFlags)[]
 }
 
 export interface SlashCommandOptions {
@@ -22,7 +19,8 @@ export interface SlashCommandOptions {
     description: string;
     subcommands?: SlashCommandBase[]
     options?: SlashCommandValueOption[]
-    permissions?: SlashCommandPermissions
+    required_channel_permissions?: Permissions
+    required_guild_permissions?: Permissions
 }
 
 export interface SlashCommandValueOption {
@@ -33,6 +31,7 @@ export interface SlashCommandValueOption {
     autocomplete?: boolean;
     choices?: SlashCommandValueOptionChoice[];
     channel_types?: SlashCommandOptionChannelTypes[];
+    required_channel_permissions?: Permissions
     min_value?: number
     max_value?: number
 }

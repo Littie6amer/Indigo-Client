@@ -45,7 +45,7 @@ class Client extends DiscordJS.Client {
         const commandFolders = ((_c = options.commandFolders) === null || _c === void 0 ? void 0 : _c.map(folder => this.rootPath + path_1.default.sep + folder)) || [];
         this.commandManager = new CommandManager_1.CommandManager({ client: this, folders: commandFolders });
         this.commands = [];
-        this.embedColor = options.embedColor || "#4b0082";
+        this.embedColor = options.embedColor || "#859dfc";
         this.toolbox = new Toolbox_1.Toolbox({ client: this });
     }
 }

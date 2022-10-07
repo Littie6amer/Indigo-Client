@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandManager = void 0;
 const SlashCommandBase_1 = require("../bases/SlashCommandBase");
 const FileUtilties_1 = require("./FileUtilties");
+const CommandContext_1 = require("../bases/CommandContext");
 class CommandManager extends FileUtilties_1.FileUtilties {
     constructor(options) {
         super();
@@ -88,7 +89,8 @@ class CommandManager extends FileUtilties_1.FileUtilties {
             if (slashcommands.length)
                 slashcommands.forEach(slashcommand => {
                     const subcommands = getSubcommands(interaction.options.data[0]);
-                    slashcommand.run(subcommands, interaction);
+                    const ctx = new CommandContext_1.CommandContext(interaction);
+                    slashcommand.run(subcommands, ctx);
                 });
             function getSubcommands(option) {
                 if (!(option === null || option === void 0 ? void 0 : option.options))

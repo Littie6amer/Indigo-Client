@@ -24,7 +24,7 @@ export class Client extends DiscordJS.Client {
         const commandFolders = options.commandFolders?.map(folder => this.rootPath + path.sep + folder) || []
         this.commandManager = new CommandManager({ client: this, folders: commandFolders })
         this.commands = []
-        this.embedColor = options.embedColor || "#4b0082"
+        this.embedColor = options.embedColor || "#859dfc"
         this.toolbox = new Toolbox({ client: this });
     }
 }
